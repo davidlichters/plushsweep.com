@@ -23,6 +23,19 @@
     var m = el.querySelector('mark'); if (m) m.textContent = t; else el.textContent = t;
   });
 
+  // Bestellschluss Weihnachten: letzter Tag d mit werktage(d, Bearbeitung max) + Laufzeit max <= 24.12., gleiche Regel
+  // wie _bestellschluss in bau/bauen.py. Im HTML steht kein Datum; ist Weihnachten nicht mehr erreichbar, bleibt der Satz weg.
+  $$('[data-weihnacht]').forEach(function (el) {
+    var b = el.dataset.bearb.split(',').map(Number), l = el.dataset.lauf.split(',').map(Number);
+    var h = new Date(); h.setHours(12, 0, 0, 0);
+    var ziel = new Date(h.getFullYear(), 11, 24, 12), d = new Date(ziel);
+    function zuSpaet(x) { return tage(werktage(x, b[1]), l[1]) > ziel; }
+    while (d > h && zuSpaet(d)) d = tage(d, -1);
+    if (d < h || zuSpaet(d)) return;
+    $$('[data-schluss]', el).forEach(function (x) { x.textContent = fmt(d); });
+    el.hidden = false;
+  });
+
   var toast = $('#toast'), zeit;
   $$('[data-kauf]').forEach(function (k) {
     k.addEventListener('click', function () {

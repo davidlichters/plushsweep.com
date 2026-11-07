@@ -110,6 +110,13 @@ main{max-width:1200px;margin:0 auto}
 .block{padding:var(--s7) var(--s4) 0}
 .block:last-of-type{padding-bottom:var(--s7)}
 .block .bild{margin-top:var(--s4);border-radius:var(--rad);background:var(--weiss)}
+/* 07.11. Feinschliff: "How it works" als 3 Schritte in eigener Schrift und Farbe statt Lieferantengrafik */
+.schritte{list-style:none;counter-reset:schritt;margin:var(--s4) 0 0;padding:0;display:grid;gap:var(--s3)}
+.schritte li{counter-increment:schritt;display:grid;grid-template-columns:32px 1fr;column-gap:var(--s3);align-items:start;background:var(--weiss);border:1px solid var(--linie);border-radius:var(--rad);padding:var(--s4)}
+.schritte li::before{content:counter(schritt);grid-row:span 2;width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--weiss);font-weight:700;font-size:var(--t2);display:flex;align-items:center;justify-content:center}
+.schritte b{font-size:var(--t3);line-height:1.3}
+.schritte span{font-size:var(--t2);color:var(--grau);line-height:1.5}
+[hidden]{display:none!important}
 .gross{font-size:var(--t3);font-weight:700}
 .vergleich{width:100%;border-collapse:collapse;font-size:var(--t1);background:var(--weiss);border:1px solid var(--linie);border-radius:var(--rad);overflow:hidden;table-layout:fixed}
 .vergleich th,.vergleich td{padding:var(--s3) var(--s2);border-bottom:1px solid var(--linie);text-align:left;vertical-align:top;overflow-wrap:anywhere}
@@ -162,8 +169,9 @@ main{max-width:1200px;margin:0 auto}
   .galerie__folie img,.galerie__clip{max-height:560px}
   .kauf{padding:0}
   .block{padding:var(--s7) var(--s5) 0}
-  .block>h2,.block>p,.block>.vergleich,.block>.akk,.block>.bild,.block>.bew__liste,.block>.bew__fotos,.block>.bew__knopf,.block>.bew__kopf{max-width:760px;margin-left:auto;margin-right:auto}
+  .block>h2,.block>p,.block>.vergleich,.block>.schritte,.block>.akk,.block>.bild,.block>.bew__liste,.block>.bew__fotos,.block>.bew__knopf,.block>.bew__kopf{max-width:760px;margin-left:auto;margin-right:auto}
   .block .bild{max-width:560px}
+  .block .bild--schritt{max-width:384px}
   .bew__liste{grid-template-columns:1fr 1fr}
   .bew__fotos{grid-template-columns:repeat(6,1fr)}
 }
