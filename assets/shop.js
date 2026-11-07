@@ -71,7 +71,13 @@
     k.addEventListener('click', function () { var o = f.classList.toggle('offen'); k.textContent = o ? 'Show less' : 'Read more'; });
     q.insertAdjacentElement('afterend', k);
   }
-  $$('.stimme').forEach(kuerzen);
+  $$('.stimme:not(.stimme--kurz)').forEach(kuerzen);
+  // Kurze Stimmen unter dem Knopf: Tippen auf die Karte klappt den vollen Text auf und zu
+  $$('.stimme--kurz').forEach(function (f) {
+    function um() { f.setAttribute('aria-expanded', f.classList.toggle('offen') ? 'true' : 'false'); }
+    f.addEventListener('click', um);
+    f.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); um(); } });
+  });
   // Bewertungen: 4 stehen im HTML, "Show more" laedt reviews.json einmal und haengt je 20 an; "See all photos" haengt die uebrigen Fotos an
   var bewDaten = null, bewPos = 0, mehr = $('[data-bew-mehr]'), fotoMehr = $('[data-fotos-mehr]');
   function laden(fertig) {

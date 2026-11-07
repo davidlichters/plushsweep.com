@@ -25,8 +25,8 @@ p{margin:0 0 var(--s3)}
 /* Kopf: eine dunkle Leiste (mit "Preview"), der Kopf */
 .leiste{background:var(--ink);color:var(--weiss);font-size:var(--t1);font-weight:700;text-align:center;padding:var(--s2) var(--s4);line-height:1.4}
 .kopf{display:flex;align-items:center;justify-content:space-between;padding:0 var(--s4);height:56px;max-width:1200px;margin:0 auto}
-.logo{font-weight:700;font-size:var(--t4);text-decoration:none;letter-spacing:-.02em}
-.logo__teil{background:linear-gradient(transparent 62%,var(--marke) 62%)}
+.logo{font-weight:700;font-size:var(--t4);text-decoration:none;letter-spacing:-.02em;color:var(--ink)}
+.logo__teil{color:inherit}
 .nav{display:flex}
 .nav a{text-decoration:none;font-size:var(--t2);padding:var(--s3) var(--s2);min-height:44px}
 main{max-width:1200px;margin:0 auto}
@@ -90,7 +90,12 @@ main{max-width:1200px;margin:0 auto}
 .stimme__titel{display:block;margin-top:var(--s2);font-size:var(--t2)}
 /* Karten gekuerzt: oben unter dem Knopf 3 Zeilen, im Block 5 Zeilen, "Read more" setzt shop.js */
 .stimme blockquote{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}
-.stimme--kurz blockquote{-webkit-line-clamp:3}
+.stimme--kurz{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s3);cursor:pointer}
+.stimme__bild{flex:0 0 64px;width:64px;height:64px;object-fit:cover;border-radius:var(--rad);background:var(--flaeche)}
+.stimme__rechts{min-width:0;flex:1}
+.stimme__zeile{display:flex;align-items:center;gap:var(--s2)}
+.stimme__name{font-size:var(--t1);color:var(--grau)}
+.stimme--kurz blockquote{-webkit-line-clamp:2;margin:var(--s1) 0 0;font-size:var(--t1);line-height:1.45}
 .stimme.offen blockquote{display:block;-webkit-line-clamp:none}
 .stimme__mehr{display:inline-flex;align-items:center;min-height:44px;margin:calc(-1 * var(--s3)) 0 0;padding:0;border:0;background:none;font:700 var(--t1) Figtree,system-ui,sans-serif;color:var(--ink);text-decoration:underline;cursor:pointer}
 .stimme__fotos{display:flex;gap:var(--s2);margin:0 0 var(--s2)}
@@ -137,7 +142,7 @@ main{max-width:1200px;margin:0 auto}
 .fuss{background:var(--ink);color:var(--linie);padding:var(--s6) var(--s4) 96px;font-size:var(--t2)}
 .fuss__innen{max-width:1200px;margin:0 auto}
 .fuss__logo{font-weight:700;font-size:var(--t4);color:var(--weiss)}
-.fuss__logo .logo__teil{background:none;color:var(--marke)}
+.fuss__logo .logo__teil{color:inherit}
 .fuss__links{display:flex;flex-wrap:wrap;margin:var(--s3) 0}
 .fuss__links a{padding:var(--s3) var(--s4) var(--s3) 0;text-decoration:none;min-height:44px}
 .fuss__klein{font-size:var(--t1);color:#a9a69d}
