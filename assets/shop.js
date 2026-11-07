@@ -3,13 +3,10 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
-  function gelb(t, offen) {
-    return offen ? '<mark class="offen">' + t + '</mark>' : t;
-  }
   function stufeSetzen() {
     var a = $('input[name="menge"]:checked');
     if (!a) return;
-    $$('[data-preis-anzeige]').forEach(function (el) { el.innerHTML = gelb(a.dataset.preis, a.dataset.offen === '1'); });
+    $$('[data-preis-anzeige]').forEach(function (el) { el.textContent = a.dataset.preis; });
     $$('[data-titel-anzeige]').forEach(function (el) { el.textContent = a.dataset.titel; });
   }
   $$('input[name="menge"]').forEach(function (i) { i.addEventListener('change', stufeSetzen); });
@@ -66,7 +63,16 @@
     window.addEventListener('scroll', function () { if (!lauf) { lauf = true; requestAnimationFrame(pruefen); } }, { passive: true });
     pruefen();
   }
-  // Bewertungen: 10 stehen im HTML, "Show more" laedt reviews.json einmal und haengt je 20 an; "See all photos" haengt die uebrigen Fotos an
+  // Lange Stimmen gekuerzt (CSS line-clamp); nur wo wirklich abgeschnitten, ein Knopf 'Read more'
+  function kuerzen(f) {
+    var q = f.querySelector('blockquote');
+    if (!q || f.querySelector('.stimme__mehr') || q.scrollHeight <= q.clientHeight + 2) return;
+    var k = document.createElement('button'); k.className = 'stimme__mehr'; k.type = 'button'; k.textContent = 'Read more';
+    k.addEventListener('click', function () { var o = f.classList.toggle('offen'); k.textContent = o ? 'Show less' : 'Read more'; });
+    q.insertAdjacentElement('afterend', k);
+  }
+  $$('.stimme').forEach(kuerzen);
+  // Bewertungen: 4 stehen im HTML, "Show more" laedt reviews.json einmal und haengt je 20 an; "See all photos" haengt die uebrigen Fotos an
   var bewDaten = null, bewPos = 0, mehr = $('[data-bew-mehr]'), fotoMehr = $('[data-fotos-mehr]');
   function laden(fertig) {
     if (bewDaten) return fertig();
@@ -74,7 +80,8 @@
   }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
   var basis = mehr ? mehr.dataset.quelle.replace(/assets\/reviews\.json$/, '') : '';
-  function bild(h, w) { var i = el('img'); i.src = basis + 'img/kunden/' + h + '.webp'; i.alt = 'Customer photo'; i.width = w; i.height = w; i.loading = 'lazy'; i.decoding = 'async'; return i; }
+  // 07.11.: Fotos in Stimmen laden sofort (kein Nachladen beim Scrollen); nur die 440 Fotos in der Scrollbox 'See all' bleiben lazy
+  function bild(h, w, lazy) { var i = el('img'); i.src = basis + 'img/kunden/' + h + '.webp'; i.alt = 'Customer photo'; i.width = w; i.height = w; if (lazy) i.loading = 'lazy'; i.decoding = 'async'; return i; }
   function karte(r) {
     var f = el('figure', 'stimme'), st = el('span', 'sterne sterne--klein'), v = el('span', 'sterne__voll');
     st.setAttribute('role', 'img'); st.setAttribute('aria-label', r[1] + '.0 out of 5 stars'); v.style.width = (r[1] * 20) + '%'; st.appendChild(v); f.appendChild(st);
@@ -90,7 +97,7 @@
     mehr.disabled = true;
     laden(function () {
       var liste = $('#bew-liste'), bis = Math.min(bewPos + 20, bewDaten.r.length);
-      for (; bewPos < bis; bewPos++) liste.appendChild(karte(bewDaten.r[bewPos]));
+      for (; bewPos < bis; bewPos++) { var kk = karte(bewDaten.r[bewPos]); liste.appendChild(kk); kuerzen(kk); }
       mehr.disabled = false;
       var rest = bewDaten.r.length - bewPos;
       if (rest <= 0) mehr.remove(); else mehr.textContent = 'Show more reviews (' + rest.toLocaleString('en-US') + ' left)';
@@ -100,7 +107,7 @@
     fotoMehr.disabled = true;
     laden(function () {
       var ul = $('#bew-fotos');
-      bewDaten.fotos.forEach(function (h) { var li = el('li'); li.appendChild(bild(h, 360)); ul.appendChild(li); });
+      bewDaten.fotos.forEach(function (h) { var li = el('li'); li.appendChild(bild(h, 360, true)); ul.appendChild(li); });
       ul.classList.add('bew__fotos--alle'); fotoMehr.remove();
     });
   });
